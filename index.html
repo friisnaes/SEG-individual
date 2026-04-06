@@ -1,0 +1,2174 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SEG — Strategisk Eksekveringsgovernance</title>
+  <style>
+
+    /* ============================================
+       VARIABLER
+    ============================================ */
+    :root {
+      --bg:            #080808;
+      --surface:       #0f0f0f;
+      --surface-2:     #161616;
+      --border:        #222;
+      --border-strong: #313131;
+      --text:          #f2f2f2;
+      --text-dim:      #b8b8b8;
+      --text-muted:    #6e6e6e;
+      --accent:        #C8102E;
+      --accent-sub:    rgba(200,16,46,0.08);
+      --c-low:         #f87171;
+      --c-mid:         #fbbf24;
+      --c-high:        #6ee7a0;
+      --radius:        2px;
+      --ease:          200ms ease;
+      --font:          'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    }
+
+    /* ============================================
+       RESET
+    ============================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font);
+      line-height: 1.6;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* ============================================
+       TYPOGRAFI — stor og læselig
+    ============================================ */
+    h1 {
+      font-size: clamp(2rem, 5vw, 3rem);
+      font-weight: 100;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--text);
+    }
+
+    h2 {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: #7a7a7a;
+    }
+
+    p {
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+    }
+
+    label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 8px;
+    }
+
+    /* ============================================
+       LAYOUT
+    ============================================ */
+    .wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 32px;
+    }
+
+    .section {
+      padding: 64px 0;
+      border-top: 1px solid var(--border);
+    }
+
+    .section-head {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 36px;
+      gap: 16px;
+    }
+
+    .section-head p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    /* ============================================
+       HEADER
+    ============================================ */
+    .site-header { border-bottom: 1px solid var(--border); }
+
+    .header-inner {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      padding: 28px 0 24px;
+      gap: 24px;
+    }
+
+    .header-brand { display: flex; flex-direction: column; gap: 6px; }
+
+    .private-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .private-tag::before {
+      content: '';
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .header-sub {
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 3px;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+      padding-top: 6px;
+    }
+
+    .week-field { display: flex; flex-direction: column; gap: 3px; text-align: right; }
+    .week-field label { text-align: right; margin-bottom: 4px; }
+
+    /* HERO — konverterende overskrift */
+    .header-hero {
+      padding: 20px 0 18px;
+      border-top: 1px solid var(--border);
+    }
+
+    .hero-line {
+      font-size: clamp(1.3rem, 3vw, 2rem);
+      font-weight: 200;
+      color: var(--text);
+      letter-spacing: -0.025em;
+      line-height: 1.25;
+      font-style: normal;
+    }
+
+    .hero-sub {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-top: 7px;
+      font-style: italic;
+      line-height: 1.5;
+    }
+
+    /* ROI-strip */
+    .value-strip {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      padding: 13px 0;
+      border-top: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .vs-item {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .vs-sep {
+      font-size: 0.7rem;
+      color: var(--border-strong);
+      font-weight: 300;
+      flex-shrink: 0;
+    }
+
+    /* ============================================
+       KNAPPER
+    ============================================ */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 20px;
+      background: transparent;
+      border: 1px solid var(--border-strong);
+      color: var(--text-dim);
+      font-family: var(--font);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: var(--radius);
+      transition: all var(--ease);
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      border-color: var(--text-dim);
+      color: var(--text);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .btn-primary { border-color: var(--accent); color: var(--accent); }
+    .btn-primary:hover { background: var(--accent-sub); }
+    .btn-sm { padding: 8px 14px; font-size: 0.7rem; }
+
+    /* ============================================
+       INPUTFELTER
+    ============================================ */
+    input[type="number"],
+    input[type="text"] {
+      width: 100%;
+      padding: 12px 15px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 1.05rem;
+      border-radius: var(--radius);
+      transition: border-color var(--ease);
+      -moz-appearance: textfield;
+    }
+
+    input[type="number"]::-webkit-inner-spin-button,
+    input[type="number"]::-webkit-outer-spin-button { -webkit-appearance: none; }
+    input:focus { outline: none; border-color: var(--border-strong); }
+    input::placeholder { color: #4a4a4a; font-style: italic; }
+
+    input[type="range"] {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 3px;
+      background: var(--border-strong);
+      border-radius: 2px;
+      outline: none;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 18px; height: 18px;
+      background: var(--text);
+      border-radius: 50%;
+      cursor: pointer;
+      transition: background var(--ease), transform var(--ease);
+    }
+
+    input[type="range"]:hover::-webkit-slider-thumb {
+      background: var(--accent);
+      transform: scale(1.15);
+    }
+
+    input[type="range"]::-moz-range-thumb {
+      width: 18px; height: 18px;
+      background: var(--text);
+      border-radius: 50%;
+      border: none;
+      cursor: pointer;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 116px;
+      padding: 14px 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: var(--font);
+      font-size: 1rem;
+      line-height: 1.7;
+      resize: vertical;
+      border-radius: var(--radius);
+      transition: border-color var(--ease);
+    }
+
+    textarea:focus { outline: none; border-color: var(--border-strong); }
+    textarea::placeholder { color: #4a4a4a; font-style: italic; }
+
+    .input-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .input-group { display: flex; flex-direction: column; }
+
+    /* ============================================
+       ÉT AT KONFRONTERE — absolut centerpiece
+    ============================================ */
+    .face-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 32px;
+      padding: 24px 36px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-bottom: none;
+      min-height: 78px;
+    }
+
+    .face-bar-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .face-bar-text {
+      font-size: 1rem;
+      font-weight: 300;
+      color: var(--text-muted);
+      font-style: italic;
+      text-align: right;
+    }
+
+    .face-bar-text.live {
+      font-size: clamp(1.25rem, 2.8vw, 1.85rem);
+      font-weight: 500;
+      color: var(--text);
+      font-style: normal;
+      letter-spacing: -0.02em;
+    }
+
+    /* ============================================
+       SUMMARY-KORT
+    ============================================ */
+    .summary-wrap { padding: 0 0 60px; }
+
+    .summary-card {
+      display: grid;
+      grid-template-columns: 210px 1fr;
+      gap: 56px;
+      align-items: start;
+      padding: 48px 52px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      position: relative;
+    }
+
+    .summary-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--accent);
+    }
+
+    /* Score-blok */
+    .score-block { display: flex; flex-direction: column; }
+
+    .ssi-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 6px;
+    }
+
+    .score-big {
+      font-size: clamp(80px, 11vw, 124px);
+      font-weight: 100;
+      letter-spacing: -0.05em;
+      line-height: 1;
+      color: var(--text);
+      display: block;
+      transition: color var(--ease);
+    }
+
+    .score-big.c-low  { color: var(--c-low); }
+    .score-big.c-mid  { color: var(--c-mid); }
+    .score-big.c-high { color: var(--c-high); }
+
+    .score-denom {
+      font-size: 0.82rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 10px;
+    }
+
+    .status-pill {
+      display: inline-block;
+      margin-top: 14px;
+      padding: 6px 15px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      border-radius: var(--radius);
+      border: 1px solid var(--border-strong);
+      color: var(--text-muted);
+      transition: all var(--ease);
+    }
+
+    .status-pill.green  { color: var(--c-high); border-color: rgba(110,231,160,0.3); background: rgba(110,231,160,0.07); }
+    .status-pill.yellow { color: var(--c-mid);  border-color: rgba(251,191,36,0.3);  background: rgba(251,191,36,0.07); }
+    .status-pill.red    { color: var(--c-low);  border-color: rgba(248,113,113,0.3); background: rgba(248,113,113,0.08); }
+
+    /* Diagnose-linje — punchline */
+    .diag-line {
+      margin-top: 18px;
+      font-size: 1.0rem;
+      font-weight: 400;
+      color: var(--text-dim);
+      line-height: 1.5;
+      font-style: italic;
+      max-width: 200px;
+    }
+
+    .diag-line.empty {
+      color: var(--text-muted);
+      font-style: normal;
+      font-size: 0.88rem;
+    }
+
+    /* Højre kolonne */
+    .summary-right {
+      display: flex;
+      flex-direction: column;
+      gap: 26px;
+      padding-top: 4px;
+    }
+
+    /* Primær begrænsning */
+    .pc-block {
+      padding: 16px 22px;
+      border-left: 2px solid var(--accent);
+      background: var(--accent-sub);
+    }
+
+    .pc-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      display: block;
+      margin-bottom: 9px;
+    }
+
+    .pc-text {
+      font-size: 1.1rem;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1.45;
+      font-style: italic;
+    }
+
+    /* Fortolkning */
+    .interpretation {
+      font-size: clamp(1.05rem, 2vw, 1.3rem);
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1.5;
+      font-style: italic;
+    }
+
+    .interpretation.empty {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-style: normal;
+    }
+
+    /* SSI-data sektion */
+    .summary-data { display: flex; flex-direction: column; gap: 16px; }
+
+    .exec-gap-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .eg-label {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .eg-value {
+      font-size: 1.9rem;
+      font-weight: 200;
+      letter-spacing: -0.03em;
+      color: var(--text-dim);
+      transition: color var(--ease);
+    }
+
+    .eg-value.gap-high { color: var(--c-low); }
+    .eg-value.gap-mid  { color: var(--c-mid); }
+    .eg-value.gap-low  { color: var(--c-high); }
+
+    /* Mini-scorer */
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px 14px;
+    }
+
+    .mini-item { display: flex; flex-direction: column; gap: 3px; }
+
+    .mini-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.11em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    /* Mini-værdier: konsistent farveska med kort-tallene */
+    .mini-val {
+      font-size: 1.65rem;
+      font-weight: 200;
+      letter-spacing: -0.03em;
+      color: var(--text-dim);
+      transition: color var(--ease);
+    }
+
+    .mini-val.c-low  { color: var(--c-low); }
+    .mini-val.c-mid  { color: var(--c-mid); }
+    .mini-val.c-high { color: var(--c-high); }
+
+    /* ============================================
+       SSI SCOREKORT
+    ============================================ */
+    .metrics-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .metric-card {
+      background: var(--surface);
+      padding: 36px 38px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+      position: relative;
+      transition: background var(--ease);
+    }
+
+    .metric-card::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: var(--border);
+      transition: background var(--ease);
+    }
+
+    .metric-card:hover { background: var(--surface-2); }
+
+    /* Farveindikator-streger — samme farver som tallene */
+    .metric-card.s-low::after  { background: var(--c-low); }
+    .metric-card.s-mid::after  { background: var(--c-mid); }
+    .metric-card.s-high::after { background: var(--c-high); }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 14px;
+    }
+
+    .card-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    /* Tal-farver konsistente med topstreg og mini-scorer */
+    .card-score-num {
+      font-size: 3.2rem;
+      font-weight: 100;
+      letter-spacing: -0.04em;
+      line-height: 1;
+      color: var(--text-muted);
+      transition: color var(--ease);
+      flex-shrink: 0;
+    }
+
+    .metric-card.s-low  .card-score-num { color: var(--c-low); }
+    .metric-card.s-mid  .card-score-num { color: var(--c-mid); }
+    .metric-card.s-high .card-score-num { color: var(--c-high); }
+
+    .card-def {
+      font-size: 0.975rem;
+      color: var(--text-dim);
+      line-height: 1.65;
+    }
+
+    .card-inputs { display: flex; flex-direction: column; gap: 14px; }
+
+    .range-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2px;
+    }
+
+    .range-val {
+      font-size: 1.15rem;
+      font-weight: 300;
+      color: var(--text);
+    }
+
+    .range-limits {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 7px;
+    }
+
+    .range-limits span {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+    }
+
+    /* Statusnoter */
+    .status-note {
+      font-size: 0.95rem;
+      color: var(--text-dim);
+      padding: 12px 15px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      line-height: 1.6;
+      transition: all var(--ease);
+    }
+
+    .status-note.warn    { border-color: rgba(248,113,113,0.3);  color: var(--c-low);  background: rgba(248,113,113,0.04); }
+    .status-note.caution { border-color: rgba(251,191,36,0.3);   color: var(--c-mid);  background: rgba(251,191,36,0.04); }
+    .status-note.strong  { border-color: rgba(110,231,160,0.3);  color: var(--c-high); background: rgba(110,231,160,0.05); }
+
+    /* ============================================
+       UGENTLIG REALITETSTJEK
+    ============================================ */
+    .reality-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .reality-card {
+      background: var(--surface);
+      padding: 32px 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .reality-accent { width: 26px; height: 2px; background: var(--accent); }
+    .reality-accent.dim { background: var(--border-strong); }
+
+    .reality-prompt {
+      font-size: 0.88rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    /* ============================================
+       ÉT TRÆK
+    ============================================ */
+    .one-move-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 48px 52px;
+      position: relative;
+    }
+
+    .one-move-card::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--border-strong);
+    }
+
+    .move-lead { font-size: 1.1rem; font-weight: 300; color: var(--text); margin-bottom: 5px; }
+    .move-sub  { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 36px; }
+    .move-stack { display: flex; flex-direction: column; gap: 22px; }
+    .move-meta { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+
+    /* ============================================
+       COACH-PANEL
+    ============================================ */
+    .coach-wrap { background: var(--surface); border: 1px solid var(--border); }
+
+    .coach-bar {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 22px 32px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .coach-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+    .coach-bar-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .coach-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--border);
+    }
+
+    .insight-cell {
+      background: var(--surface);
+      padding: 28px 34px;
+      transition: background var(--ease);
+    }
+
+    .insight-cell:hover { background: var(--surface-2); }
+    .insight-cell.full  { grid-column: 1 / -1; }
+
+    .insight-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .insight-text {
+      font-size: 1.05rem;
+      font-weight: 300;
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    .insight-text.dim { color: var(--text-muted); font-style: italic; }
+
+    .insight-cell.question { border-top: 1px solid var(--border); }
+    .insight-cell.question .insight-label { color: var(--accent); }
+    .insight-cell.question .insight-text {
+      font-size: 1.1rem;
+      font-style: italic;
+      color: var(--text-dim);
+    }
+
+    /* ============================================
+       EKSPORT
+    ============================================ */
+    .export-strip { border-top: 1px solid var(--border); padding: 44px 0; }
+
+    .export-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+    }
+
+    .export-copy p { font-size: 0.88rem; color: var(--text-muted); margin-top: 4px; }
+    .export-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+
+    /* ============================================
+       TOAST
+    ============================================ */
+    .toast {
+      position: fixed;
+      bottom: 28px; right: 28px;
+      z-index: 9000;
+      padding: 14px 26px;
+      background: var(--surface-2);
+      border: 1px solid var(--border-strong);
+      color: var(--text);
+      font-size: 0.82rem;
+      letter-spacing: 0.05em;
+      border-radius: var(--radius);
+      opacity: 0;
+      transform: translateY(6px);
+      transition: opacity 280ms ease, transform 280ms ease;
+      pointer-events: none;
+    }
+
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* ============================================
+       SIDEFOD
+    ============================================ */
+    .site-footer { border-top: 1px solid var(--border); padding: 22px 0; }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .footer-inner p { font-size: 0.78rem; color: var(--text-muted); letter-spacing: 0.05em; }
+
+    /* ============================================
+       PRINT
+    ============================================ */
+    @media print {
+      body { background: #fff; color: #111; font-size: 14px; }
+
+      .site-header .header-right,
+      .export-strip, .btn, .toast, .site-footer { display: none !important; }
+
+      .face-bar, .summary-card, .metric-card, .reality-card,
+      .one-move-card, .coach-wrap, .insight-cell {
+        background: #fff !important;
+        border-color: #ccc !important;
+        break-inside: avoid;
+      }
+
+      .score-big, .card-score-num, .interpretation,
+      .face-bar-text, .pc-text, .diag-line { color: #111 !important; }
+
+      .card-name, .section-head p, .card-def { color: #555 !important; }
+      .reality-prompt, .insight-label, h2 { color: #666 !important; }
+      .insight-text { color: #222 !important; }
+      .status-note  { color: #444 !important; border-color: #ccc !important; background: #f8f8f8 !important; }
+      input, textarea { border-color: #ccc !important; color: #111 !important; background: #fff !important; }
+
+      .metrics-grid, .reality-grid, .coach-grid { gap: 8px; background: transparent !important; }
+      .metric-card::after { display: none; }
+      .summary-card::before { background: #C8102E !important; }
+      .pc-block { border-color: #C8102E !important; background: #fff5f5 !important; }
+      .section { border-top-color: #ddd !important; }
+      .wrap { padding: 0 14px; }
+
+      .hero-line { color: #111 !important; font-size: 1.2rem !important; }
+      .ssi-label, .private-tag { color: #C8102E !important; }
+    }
+
+    /* ============================================
+       RESPONSIVT
+    ============================================ */
+    @media (max-width: 860px) {
+      .summary-card { grid-template-columns: 1fr; gap: 32px; padding: 36px 32px; }
+      .diag-line { max-width: 100%; }
+      .mini-grid { grid-template-columns: repeat(2, 1fr); }
+      .metrics-grid { grid-template-columns: 1fr; }
+      .reality-grid { grid-template-columns: 1fr; }
+      .coach-grid   { grid-template-columns: 1fr; }
+      .insight-cell.full { grid-column: 1 / 1; }
+      .one-move-card { padding: 36px 28px; }
+      .move-meta { grid-template-columns: 1fr; }
+      .export-inner { flex-direction: column; align-items: flex-start; }
+      .face-bar { flex-direction: column; align-items: flex-start; gap: 10px; }
+      .face-bar-text { text-align: left; }
+    }
+
+    @media (max-width: 600px) {
+      .wrap { padding: 0 18px; }
+      .header-inner { flex-direction: column; align-items: flex-start; gap: 18px; padding-bottom: 18px; }
+      .metric-card { padding: 28px 22px; }
+      .input-row { grid-template-columns: 1fr; }
+      .score-big { font-size: 80px; }
+      .section { padding: 48px 0; }
+      .export-btns { width: 100%; }
+      .export-btns .btn { flex: 1; justify-content: center; }
+      .hero-line { font-size: 1.2rem; }
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- ============================================
+     HEADER
+============================================ -->
+<header class="site-header">
+  <div class="wrap">
+    <div class="header-inner">
+      <div class="header-brand">
+        <span class="private-tag">Privat ledelsesværktøj</span>
+        <h1>SEG</h1>
+        <p class="header-sub">Strategisk Eksekveringsgovernance</p>
+      </div>
+      <div class="header-right">
+        <div class="week-field">
+          <label>Uge</label>
+          <input type="text" id="week-date" style="width:162px;text-align:right;" placeholder="f.eks. 7. april 2025">
+        </div>
+        <button class="btn btn-sm" onclick="resetWeek()">Nulstil uge</button>
+      </div>
+    </div>
+
+    <!-- HERO -->
+    <div class="header-hero">
+      <p class="hero-line">Du var travl. Var du effektiv?</p>
+      <p class="hero-sub">Ingen narrativ. Kun eksekvering.</p>
+    </div>
+
+    <!-- ROI-STRIP -->
+    <div class="value-strip">
+      <span class="vs-item">10 min / uge</span>
+      <span class="vs-sep">·</span>
+      <span class="vs-item">Ét klart problem — altid</span>
+      <span class="vs-sep">·</span>
+      <span class="vs-item">Én konkret handling</span>
+      <span class="vs-sep">·</span>
+      <span class="vs-item">SSI — Strategisk Sundhedsindeks</span>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============================================
+       ÉT AT KONFRONTERE + SUMMARY
+  ============================================ -->
+  <div class="wrap" style="padding-top:52px;">
+
+    <div class="face-bar">
+      <span class="face-bar-label">Ét at konfrontere denne uge</span>
+      <span class="face-bar-text" id="face-text">Ingen score. Ingen sandhed.</span>
+    </div>
+
+    <div class="summary-wrap">
+      <div class="summary-card">
+
+        <!-- Venstre: SSI-score -->
+        <div class="score-block">
+          <span class="ssi-label">SSI</span>
+          <span class="score-big" id="total-score">—</span>
+          <span class="score-denom">/ 100 &nbsp;·&nbsp; <span id="score-count">0</span> af 6</span>
+          <span class="status-pill" id="status-pill">Ingen data</span>
+          <p class="diag-line empty" id="diag-text">Indtast tallene. Se sandheden.</p>
+        </div>
+
+        <!-- Højre: kontekst og data -->
+        <div class="summary-right">
+
+          <div class="pc-block" id="pc-block" style="display:none;">
+            <span class="pc-label">Primær begrænsning</span>
+            <p class="pc-text" id="pc-text"></p>
+          </div>
+
+          <p class="interpretation empty" id="interp-text">Ingen score endnu. Ingen fortælling endnu.</p>
+
+          <div class="summary-data">
+            <div class="exec-gap-row">
+              <span class="eg-label">Eksekveringsgab (SSI)</span>
+              <span class="eg-value" id="exec-gap">—</span>
+            </div>
+            <div class="mini-grid">
+              <div class="mini-item">
+                <span class="mini-label">Resultat</span>
+                <span class="mini-val" id="mini-outcome">—</span>
+              </div>
+              <div class="mini-item">
+                <span class="mini-label">Beslutning</span>
+                <span class="mini-val" id="mini-decision">—</span>
+              </div>
+              <div class="mini-item">
+                <span class="mini-label">Fokus</span>
+                <span class="mini-val" id="mini-focus">—</span>
+              </div>
+              <div class="mini-item">
+                <span class="mini-label">Kapacitet</span>
+                <span class="mini-val" id="mini-capacity">—</span>
+              </div>
+              <div class="mini-item">
+                <span class="mini-label">Eliminering</span>
+                <span class="mini-val" id="mini-elimination">—</span>
+              </div>
+              <div class="mini-item">
+                <span class="mini-label">Identitet</span>
+                <span class="mini-val" id="mini-identity">—</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============================================
+       SEG / SSI SCOREKORT
+  ============================================ -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>SSI-komponenter</h2>
+        <p>Seks dimensioner. Ingen undskyldninger.</p>
+      </div>
+      <div class="metrics-grid">
+
+        <!-- RESULTAT -->
+        <div class="metric-card" id="card-outcome">
+          <div class="card-top">
+            <span class="card-name">Resultat-score</span>
+            <span class="card-score-num" id="num-outcome">—</span>
+          </div>
+          <p class="card-def">Leverede du hvad du forpligtede dig til? Manglende levering er ikke et tilbageslag — det er data.</p>
+          <div class="card-inputs">
+            <div class="input-row">
+              <div class="input-group">
+                <label>Forpligtede resultater</label>
+                <input type="number" id="outcome-committed" min="0" placeholder="0" oninput="calcOutcome()">
+              </div>
+              <div class="input-group">
+                <label>Leverede resultater</label>
+                <input type="number" id="outcome-delivered" min="0" placeholder="0" oninput="calcOutcome()">
+              </div>
+            </div>
+          </div>
+          <div class="status-note" id="note-outcome">Indtast forpligtede og leverede resultater.</div>
+        </div>
+
+        <!-- BESLUTNING -->
+        <div class="metric-card" id="card-decision">
+          <div class="card-top">
+            <span class="card-name">Beslutnings-score</span>
+            <span class="card-score-num" id="num-decision">—</span>
+          </div>
+          <p class="card-def">En beslutning der ikke eksekveres er en samtale, ikke en beslutning. Mål hvad der faktisk bevægede sig.</p>
+          <div class="card-inputs">
+            <div class="input-row">
+              <div class="input-group">
+                <label>Trufne beslutninger</label>
+                <input type="number" id="decision-taken" min="0" placeholder="0" oninput="calcDecision()">
+              </div>
+              <div class="input-group">
+                <label>Eksekverede beslutninger</label>
+                <input type="number" id="decision-executed" min="0" placeholder="0" oninput="calcDecision()">
+              </div>
+            </div>
+          </div>
+          <div class="status-note" id="note-decision">Indtast trufne og eksekverede beslutninger.</div>
+        </div>
+
+        <!-- FOKUS -->
+        <div class="metric-card" id="card-focus">
+          <div class="card-top">
+            <span class="card-name">Fokus-score</span>
+            <span class="card-score-num" id="num-focus">—</span>
+          </div>
+          <p class="card-def">Hvilken andel af din faktiske tid gik til dine top tre prioriteter? Ikke din kalender — din virkelighed.</p>
+          <div class="card-inputs">
+            <div class="input-group">
+              <div class="range-row">
+                <label style="margin:0;">Tid på top 3 prioriteter</label>
+                <span class="range-val" id="focus-display">—%</span>
+              </div>
+              <input type="range" id="focus-slider" min="0" max="100" value="0" oninput="calcFocus()" data-touched="false">
+              <div class="range-limits"><span>0%</span><span>50%</span><span>100%</span></div>
+            </div>
+          </div>
+          <div class="status-note" id="note-focus">Træk slideren. Vær ærlig, ikke generøs.</div>
+        </div>
+
+        <!-- KAPACITET -->
+        <div class="metric-card" id="card-capacity">
+          <div class="card-top">
+            <span class="card-name">Kapacitetsintegritet</span>
+            <span class="card-score-num" id="num-capacity">—</span>
+          </div>
+          <p class="card-def">Passede dine forpligtelser til din faktiske kapacitet? Overkommittering er et strukturelt valg, ikke uheld.</p>
+          <div class="card-inputs">
+            <div class="input-row">
+              <div class="input-group">
+                <label>Tilgængelige timer</label>
+                <input type="number" id="cap-available" min="0" placeholder="0" oninput="calcCapacity()">
+              </div>
+              <div class="input-group">
+                <label>Forpligtede timer</label>
+                <input type="number" id="cap-committed" min="0" placeholder="0" oninput="calcCapacity()">
+              </div>
+            </div>
+          </div>
+          <div class="status-note" id="note-capacity">Tilgængelige timer vs. forpligtede timer.</div>
+        </div>
+
+        <!-- ELIMINERING -->
+        <div class="metric-card" id="card-elimination">
+          <div class="card-top">
+            <span class="card-name">Eliminerings-score</span>
+            <span class="card-score-num" id="num-elimination">—</span>
+          </div>
+          <p class="card-def">Strategi handler ligeså meget om hvad du stoppede som hvad du startede. Hvad fjernede du bevidst?</p>
+          <div class="card-inputs">
+            <div class="input-group">
+              <label>Ting stoppet, fjernet eller annulleret</label>
+              <input type="number" id="elim-count" min="0" placeholder="0" oninput="calcElimination()">
+            </div>
+          </div>
+          <div class="status-note" id="note-elimination">Nul eliminering er et signal, ikke en neutral position.</div>
+        </div>
+
+        <!-- IDENTITET -->
+        <div class="metric-card" id="card-identity">
+          <div class="card-top">
+            <span class="card-name">Identitetsafstemning</span>
+            <span class="card-score-num" id="num-identity">—</span>
+          </div>
+          <p class="card-def">I hvilken grad handlede du som den leder du hævder at ville være? Selvvurdering. Vær ærlig, ikke generøs.</p>
+          <div class="card-inputs">
+            <div class="input-group">
+              <div class="range-row">
+                <label style="margin:0;">Selvvurdering</label>
+                <span class="range-val" id="identity-display">—</span>
+              </div>
+              <input type="range" id="identity-slider" min="0" max="100" value="0" oninput="calcIdentity()" data-touched="false">
+              <div class="range-limits"><span>0 — Slet ikke</span><span>100 — Fuldt ud</span></div>
+            </div>
+          </div>
+          <div class="status-note" id="note-identity">Den sværeste score at oppusse, hvis du er ærlig.</div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       UGENTLIG REALITETSTJEK
+  ============================================ -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Ugentlig realitetstjek</h2>
+        <p>Kløften mellem din fortælling og din adfærd.</p>
+      </div>
+      <div class="reality-grid">
+        <div class="reality-card">
+          <div class="reality-accent"></div>
+          <span class="reality-prompt">Den brutale sandhed denne uge</span>
+          <textarea id="txt-truth" placeholder="Hvad skete faktisk? Ingen narrativ. Ingen undskyldninger."></textarea>
+        </div>
+        <div class="reality-card">
+          <div class="reality-accent dim"></div>
+          <span class="reality-prompt">Hvad jeg sagde betød noget</span>
+          <textarea id="txt-said" placeholder="Hvad forpligtede du dig offentligt til som vigtigt?"></textarea>
+        </div>
+        <div class="reality-card">
+          <div class="reality-accent dim"></div>
+          <span class="reality-prompt">Hvad jeg faktisk gjorde</span>
+          <textarea id="txt-did" placeholder="Hvor gik din tid og opmærksomhed faktisk hen?"></textarea>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       ÉT TRÆK FOR NÆSTE UGE
+  ============================================ -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Ét træk for næste uge</h2>
+        <p>Refleksion uden forpligtelse er teater.</p>
+      </div>
+      <div class="one-move-card">
+        <p class="move-lead">Fra indsigt til eksekvering</p>
+        <p class="move-sub">Ét klart engagement. Ét ting at stoppe. Én beslutning nu — med navn, dato og færdighedsdefinition.</p>
+        <div class="move-stack">
+          <div class="input-group">
+            <label>Den ene handling der vil flytte min SSI mest næste uge</label>
+            <input type="text" id="move-action" placeholder="Vær specifik. Vage forpligtelser eksekveres ikke.">
+          </div>
+          <div class="input-group">
+            <label>Hvad jeg vil stoppe med at gøre</label>
+            <input type="text" id="move-stop" placeholder="Subtraktion er en beslutning. Navngiv den præcist.">
+          </div>
+          <div class="input-group">
+            <label>Beslutning der operationaliseres nu</label>
+            <input type="text" id="move-decision" placeholder="Hvilken beslutning forpligter du dig til i dag?">
+          </div>
+          <div class="move-meta">
+            <div class="input-group">
+              <label>Ansvarlig</label>
+              <input type="text" id="move-owner" placeholder="Navn">
+            </div>
+            <div class="input-group">
+              <label>Deadline</label>
+              <input type="text" id="move-deadline" placeholder="Dato eller milepæl">
+            </div>
+            <div class="input-group">
+              <label>Færdig når</label>
+              <input type="text" id="move-dod" placeholder="Hvordan ved du at det er færdigt?">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       SEG COACH-PANEL
+  ============================================ -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>SEG Coach-panel</h2>
+        <p>Autogenereret. Opdateres live.</p>
+      </div>
+      <div class="coach-wrap">
+        <div class="coach-bar">
+          <div class="coach-dot"></div>
+          <span class="coach-bar-title">Strategisk indsigts-panel — baseret på SSI-scorer</span>
+        </div>
+        <div class="coach-grid">
+          <div class="insight-cell full" style="border-bottom:1px solid var(--border-strong);">
+            <div class="insight-label">Primær begrænsning</div>
+            <div class="insight-text dim" id="coach-constraint">Indtast scorer for at generere indsigter.</div>
+          </div>
+          <div class="insight-cell">
+            <div class="insight-label">Laveste SSI-komponent</div>
+            <div class="insight-text dim" id="coach-low">—</div>
+          </div>
+          <div class="insight-cell">
+            <div class="insight-label">Højeste SSI-komponent</div>
+            <div class="insight-text dim" id="coach-high">—</div>
+          </div>
+          <div class="insight-cell">
+            <div class="insight-label">Største eksekveringsrisiko</div>
+            <div class="insight-text dim" id="coach-risk">—</div>
+          </div>
+          <div class="insight-cell">
+            <div class="insight-label">Coaching-vinkel</div>
+            <div class="insight-text dim" id="coach-angle">—</div>
+          </div>
+          <div class="insight-cell question full">
+            <div class="insight-label">Åbningsspørgsmål</div>
+            <div class="insight-text dim" id="coach-question">—</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================================
+       EKSPORTER
+  ============================================ -->
+  <div class="export-strip">
+    <div class="wrap">
+      <div class="export-inner">
+        <div class="export-copy">
+          <h2>Eksporter og gem</h2>
+          <p>Kopier rapporten til coachingnoter, print til PDF, eller nulstil for næste uge.</p>
+        </div>
+        <div class="export-btns">
+          <button class="btn btn-primary" onclick="copyClipboard()">Kopier rapport</button>
+          <button class="btn" onclick="window.print()">Print / PDF</button>
+          <button class="btn btn-sm" onclick="resetWeek()">Nulstil uge</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <div class="footer-inner">
+      <p>SEG — Strategisk Eksekveringsgovernance &nbsp;·&nbsp; SSI — Strategisk Sundhedsindeks</p>
+      <p>Gemt lokalt i din browser. Intet forlader denne side.</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+
+  /* ============================================
+     TILSTAND
+  ============================================ */
+
+  const S = {
+    outcome:     null,
+    decision:    null,
+    focus:       null,
+    capacity:    null,
+    elimination: null,
+    identity:    null
+  };
+
+  const LABELS = {
+    outcome:     'Resultat-score',
+    decision:    'Beslutnings-score',
+    focus:       'Fokus-score',
+    capacity:    'Kapacitetsintegritet',
+    elimination: 'Eliminerings-score',
+    identity:    'Identitetsafstemning'
+  };
+
+
+  /* ============================================
+     PERSISTENS
+  ============================================ */
+
+  const STORE = 'seg-ssi-da-v1';
+
+  const FIELD_IDS = [
+    'outcome-committed','outcome-delivered',
+    'decision-taken','decision-executed',
+    'cap-available','cap-committed',
+    'elim-count',
+    'txt-truth','txt-said','txt-did',
+    'move-action','move-stop','move-decision',
+    'move-owner','move-deadline','move-dod',
+    'week-date'
+  ];
+
+  const SLIDER_IDS = ['focus-slider','identity-slider'];
+
+  function saveState() {
+    const d = {};
+    FIELD_IDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) d[id] = el.value;
+    });
+    SLIDER_IDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { d[id] = el.value; d[id + '_t'] = el.dataset.touched; }
+    });
+    localStorage.setItem(STORE, JSON.stringify(d));
+  }
+
+  function loadState() {
+    let data;
+    try { data = JSON.parse(localStorage.getItem(STORE)); } catch(e) {}
+    if (!data) return;
+
+    FIELD_IDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && data[id] !== undefined) el.value = data[id];
+    });
+
+    SLIDER_IDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el && data[id] !== undefined) {
+        el.value = data[id];
+        el.dataset.touched = data[id + '_t'] || 'false';
+      }
+    });
+
+    calcOutcome();
+    calcDecision();
+    if (document.getElementById('focus-slider').dataset.touched === 'true') calcFocus();
+    calcCapacity();
+    calcElimination();
+    if (document.getElementById('identity-slider').dataset.touched === 'true') calcIdentity();
+  }
+
+  document.addEventListener('input', saveState);
+
+
+  /* ============================================
+     SCOREBEREGNINGER
+  ============================================ */
+
+  function calcOutcome() {
+    const committed = parseFloat(document.getElementById('outcome-committed').value);
+    const delivered = parseFloat(document.getElementById('outcome-delivered').value);
+
+    if (isNaN(committed) || committed <= 0) {
+      S.outcome = null;
+      setCard('outcome', null, 'Indtast forpligtede og leverede resultater.', '');
+      refresh(); return;
+    }
+
+    const d     = isNaN(delivered) ? 0 : Math.min(delivered, committed);
+    const score = Math.round((d / committed) * 100);
+    S.outcome   = score;
+
+    let note, cls;
+    if (score < 50) {
+      note = `${d} af ${committed} forpligtelser leveret. Den kløft er det reelle problem.`;
+      cls  = 'warn';
+    } else if (score < 80) {
+      note = `${d} af ${committed} leveret. Tæt på, men ikke ren eksekvering.`;
+      cls  = 'caution';
+    } else {
+      note = `${d} af ${committed} leveret. Stærk gennemførelse.`;
+      cls  = 'strong';
+    }
+
+    setCard('outcome', score, note, cls);
+    refresh();
+  }
+
+  function calcDecision() {
+    const taken    = parseFloat(document.getElementById('decision-taken').value);
+    const executed = parseFloat(document.getElementById('decision-executed').value);
+
+    if (isNaN(taken) || taken <= 0) {
+      S.decision = null;
+      setCard('decision', null, 'Indtast trufne og eksekverede beslutninger.', '');
+      refresh(); return;
+    }
+
+    const e     = isNaN(executed) ? 0 : Math.min(executed, taken);
+    const score = Math.round((e / taken) * 100);
+    S.decision  = score;
+
+    let note, cls;
+    if (score < 50) {
+      note = `${e} af ${taken} beslutninger eksekveret. Beslutninger uden handling er intentioner.`;
+      cls  = 'warn';
+    } else if (score < 80) {
+      note = `${e} af ${taken} ført til handling. Nogen beslutninger mangler operationalisering.`;
+      cls  = 'caution';
+    } else {
+      note = `${e} af ${taken} eksekveret. Høj beslutningsintegritet.`;
+      cls  = 'strong';
+    }
+
+    setCard('decision', score, note, cls);
+    refresh();
+  }
+
+  function calcFocus() {
+    const slider = document.getElementById('focus-slider');
+    slider.dataset.touched = 'true';
+    const pct   = parseInt(slider.value);
+    document.getElementById('focus-display').textContent = pct + '%';
+    S.focus = pct;
+
+    let note, cls;
+    if (pct < 40) {
+      note = 'Rød zone. Under 40% på faktiske prioriteter. Fragmenteret eksekvering.';
+      cls  = 'warn';
+    } else if (pct < 70) {
+      note = 'Advarselzone. Noget fokus — ikke nok til fuld effektivitet.';
+      cls  = 'caution';
+    } else {
+      note = 'Over 70% på topprioriteterne. Det er intentionelt lederskab.';
+      cls  = 'strong';
+    }
+
+    const n = document.getElementById('note-focus');
+    n.textContent = note;
+    n.className   = 'status-note ' + cls;
+    setCard('focus', pct, null, null);
+    refresh();
+  }
+
+  function calcCapacity() {
+    const available = parseFloat(document.getElementById('cap-available').value);
+    const committed = parseFloat(document.getElementById('cap-committed').value);
+
+    if (isNaN(available) || available <= 0) {
+      S.capacity = null;
+      setCard('capacity', null, 'Tilgængelige timer vs. forpligtede timer.', '');
+      refresh(); return;
+    }
+
+    const c = isNaN(committed) ? 0 : committed;
+    let score, note, cls;
+
+    if (c <= available) {
+      score = 100;
+      note  = 'Forpligtelser inden for kapacitet. Du opererer med integritet.';
+      cls   = 'strong';
+    } else {
+      const ratio = (c - available) / available;
+      score = Math.max(0, Math.round(100 - ratio * 150 - ratio * ratio * 80));
+      const overH = Math.round(c - available);
+      if (score < 35) {
+        note = `+${overH} timer over faktisk kapacitet. Det er ikke uheld — det er overkommittering.`;
+        cls  = 'warn';
+      } else {
+        note = `+${overH} timer over kapacitet. Fokus og kvalitet betaler prisen.`;
+        cls  = 'caution';
+      }
+    }
+
+    S.capacity = score;
+    const n = document.getElementById('note-capacity');
+    n.textContent = note;
+    n.className   = 'status-note ' + cls;
+    setCard('capacity', score, null, null);
+    refresh();
+  }
+
+  function calcElimination() {
+    const raw   = document.getElementById('elim-count').value;
+    const count = parseInt(raw);
+
+    if (raw === '' || isNaN(count) || count < 0) {
+      S.elimination = null;
+      setCard('elimination', null, 'Nul eliminering er et signal, ikke en neutral position.', '');
+      refresh(); return;
+    }
+
+    let score, note, cls;
+
+    if (count === 0) {
+      score = 0;
+      note  = 'Intet elimineret. Ingen strategi uden fravalg. Du tilføjede — du fjernede ikke.';
+      cls   = 'warn';
+    } else if (count === 1) {
+      score = 80;
+      note  = 'Ét ting bevidst stoppet. Én handling af strategisk disciplin.';
+      cls   = 'caution';
+    } else {
+      score = 100;
+      note  = `${count} ting fjernet eller stoppet. Høj elimineringsdisciplin.`;
+      cls   = 'strong';
+    }
+
+    S.elimination = score;
+    const n = document.getElementById('note-elimination');
+    n.textContent = note;
+    n.className   = 'status-note ' + cls;
+    setCard('elimination', score, null, null);
+    refresh();
+  }
+
+  function calcIdentity() {
+    const slider = document.getElementById('identity-slider');
+    slider.dataset.touched = 'true';
+    const val   = parseInt(slider.value);
+    document.getElementById('identity-display').textContent = val;
+    S.identity = val;
+
+    let note, cls;
+    if (val < 40) {
+      note = 'Stor kløft mellem den leder du hævder at være og den der mødte op. Navngiv det.';
+      cls  = 'warn';
+    } else if (val < 70) {
+      note = 'Delvis afstemning. Du mødte op som dig selv en del af tiden.';
+      cls  = 'caution';
+    } else {
+      note = 'Høj afstemning. Din adfærd matchede din erklærede standard.';
+      cls  = 'strong';
+    }
+
+    const n = document.getElementById('note-identity');
+    n.textContent = note;
+    n.className   = 'status-note ' + cls;
+    setCard('identity', val, null, null);
+    refresh();
+  }
+
+
+  /* ============================================
+     KORTVISNING
+  ============================================ */
+
+  function setCard(metric, score, note, cls) {
+    const card   = document.getElementById('card-' + metric);
+    const numEl  = document.getElementById('num-' + metric);
+    const noteEl = document.getElementById('note-' + metric);
+
+    numEl.textContent = score !== null ? score : '—';
+
+    card.className = 'metric-card';
+    if (score !== null) {
+      if      (score < 60) card.classList.add('s-low');
+      else if (score < 80) card.classList.add('s-mid');
+      else                 card.classList.add('s-high');
+    }
+
+    if (noteEl && note !== null) {
+      noteEl.textContent = note;
+      noteEl.className   = 'status-note' + (cls ? ' ' + cls : '');
+    }
+  }
+
+
+  /* ============================================
+     PRIMÆR BEGRÆNSNING — max 8 ord, skarp
+  ============================================ */
+
+  function getPrimaryConstraint(s) {
+    const active = Object.values(s).filter(v => v !== null);
+    if (!active.length) return null;
+
+    if (s.capacity !== null && s.capacity < 40)
+      return "Overcommitment ødelægger din eksekvering.";
+
+    if (s.capacity !== null && s.capacity < 55 && s.focus !== null && s.focus < 50)
+      return "Du er overbelastet og fragmenteret.";
+
+    if (s.decision !== null && s.decision > 70 && s.outcome !== null && s.outcome < 50)
+      return "Du beslutter mere end du leverer.";
+
+    if (s.focus !== null && s.focus < 38)
+      return "Dit fokus er fragmenteret.";
+
+    if (s.identity !== null && s.identity > 75 && s.outcome !== null && s.outcome < 50)
+      return "Dit selvbillede er foran din eksekvering.";
+
+    if (s.elimination === 0 && s.capacity !== null && s.capacity < 70)
+      return "Ingen strategi uden fravalg.";
+
+    if (s.outcome !== null && s.outcome < 45)
+      return "Du leverer ikke det du forpligter dig til.";
+
+    if (s.focus !== null && s.focus < 55 && s.outcome !== null && s.outcome < 68)
+      return "Du er aktiv — ikke aligned.";
+
+    if (s.elimination === 0 && s.identity !== null && s.identity > 72)
+      return "Du vil lede tydeligt. Du subtraherer ikke.";
+
+    if (s.decision !== null && s.decision < 50)
+      return "Du undgår beslutningerne der ville ændre tingene.";
+
+    if (s.capacity !== null && s.capacity < 70)
+      return "Kapacitet er begrænsningen bag alle andre scorer.";
+
+    const avg = active.reduce((a,b) => a+b, 0) / active.length;
+    if (avg >= 82) return "Oprethold standarden.";
+    return "Find én begrænsning. Fjern den.";
+  }
+
+
+  /* ============================================
+     ÉT AT KONFRONTERE — streng prioritet, max 10 ord
+  ============================================ */
+
+  function getOneThing(s) {
+    const active = Object.values(s).filter(v => v !== null);
+    if (!active.length) return "Ingen score. Ingen sandhed.";
+
+    // Streng prioritet: 1→2→3→4→5
+    if (s.capacity !== null && s.capacity < 55)
+      return "Du er overcommitted. Det er problemet.";
+
+    if (s.outcome !== null && s.outcome < 60)
+      return "Du leverer ikke det du lover.";
+
+    if (s.elimination === 0)
+      return "Du fjerner ingenting. Derfor drukner du.";
+
+    if (s.focus !== null && s.focus < 50)
+      return "Dit fokus er fragmenteret.";
+
+    const avg = active.reduce((a,b) => a+b, 0) / active.length;
+    if (avg >= 80) return "Beskyt standarden. Intet er selvfølgeligt.";
+    return "Du er aktiv — ikke aligned.";
+  }
+
+
+  /* ============================================
+     DIAGNOSE-LINJE — punchline, komplementær
+  ============================================ */
+
+  function buildDiagnosis(s) {
+    const active = Object.values(s).filter(v => v !== null);
+    if (!active.length) return null;
+
+    const lo   = v => v !== null && v < 50;
+    const hi   = v => v !== null && v >= 76;
+    const zero = v => v === 0;
+
+    if (lo(s.capacity) && lo(s.focus))
+      return "Du beskytter aktivitet — ikke resultater.";
+
+    if (hi(s.decision) && lo(s.outcome))
+      return "Du bevægede dig meget. Du afsluttede for lidt.";
+
+    if (lo(s.outcome) && lo(s.focus))
+      return "Din uge var fuld. Din eksekvering var tynd.";
+
+    if (zero(s.elimination) && lo(s.capacity))
+      return "Du gør meget. Du leverer for lidt.";
+
+    if (hi(s.identity) && lo(s.outcome))
+      return "Din fortælling og din adfærd peger i forskellig retning.";
+
+    if (lo(s.focus))
+      return "Du løser alt undtagen det rigtige.";
+
+    if (lo(s.outcome))
+      return "Indsatsen var der. Resultaterne var det ikke.";
+
+    const avg = active.reduce((a,b) => a+b, 0) / active.length;
+    if (avg >= 82) return "Solid uge. Standarden er bevist.";
+    if (avg >= 68) return "Funktionelt — ikke skarpt nok.";
+    if (avg >= 55) return "Under dit eget niveau.";
+    return "Denne uge matchede ikke dine standarder.";
+  }
+
+
+  /* ============================================
+     FORTOLKNINGSMOTOR — 16 mønstre
+  ============================================ */
+
+  function buildInterpretation(s) {
+    const lo   = v => v !== null && v < 50;
+    const hi   = v => v !== null && v >= 76;
+    const zero = v => v === 0;
+
+    if (lo(s.capacity) && lo(s.focus))
+      return "Du er overbelastet og kalder det ambition. Det er ikke det samme.";
+
+    if (hi(s.decision) && lo(s.outcome))
+      return "Du forveksler bevægelse med fremgang. Beslutninger uden levering er støj.";
+
+    if (hi(s.identity) && lo(s.outcome) && lo(s.decision))
+      return "Godt selvbillede. Svag operationel disciplin.";
+
+    if (lo(s.outcome) && lo(s.decision))
+      return "Dit problem er ikke intention. Det er manglende gennemførelse.";
+
+    if (hi(s.outcome) && lo(s.identity))
+      return "Du leverer — men ikke i en retning der føles afstemt. Tjek retningen.";
+
+    if (zero(s.elimination) && lo(s.capacity))
+      return "Du er ikke knap på indsats. Du er knap på fravalg.";
+
+    if (hi(s.identity) && zero(s.elimination))
+      return "Du forsøger at lede tydeligt mens du opererer i støj af din egen skabelse.";
+
+    if (lo(s.focus) && hi(s.outcome))
+      return "Du fik resultater på trods af fragmenteringen. Det er ikke bæredygtigt.";
+
+    if (s.capacity !== null && s.capacity >= 76 && lo(s.outcome))
+      return "Du har kapacitet. Dit problem er ikke belastning — det er gennemførelse.";
+
+    if (lo(s.decision) && hi(s.focus))
+      return "Godt fokus. For få beslutninger til at udnytte det.";
+
+    if (hi(s.decision) && lo(s.focus))
+      return "Du træffer beslutninger uden fokus til at eksekvere dem.";
+
+    if (zero(s.elimination) && hi(s.outcome))
+      return "Du leverer — men subtraherer ikke. Fremtidig overbelastning akkumulerer.";
+
+    if (hi(s.capacity) && hi(s.decision) && lo(s.outcome))
+      return "Du siger meget betyder noget. For lidt bliver færdigt.";
+
+    if (lo(s.focus) && lo(s.outcome) && s.capacity !== null && s.capacity > 65)
+      return "Problemet er ikke tempo. Det er fejlrettet opmærksomhed.";
+
+    if (lo(s.identity) && hi(s.outcome))
+      return "Stærk levering. Lav afstemning. Du eksekverer hårdt — i den forkerte retning.";
+
+    if (hi(s.identity) && lo(s.capacity))
+      return "Klar fornemmelse af hvem du vil være. Ingen kapacitet til at handle derefter.";
+
+    const active = Object.values(s).filter(v => v !== null);
+    if (!active.length) return "Ingen score endnu. Ingen fortælling endnu.";
+    const avg = active.reduce((a,b) => a+b, 0) / active.length;
+
+    if (avg >= 85) return "Exceptionel uge. Standarden er sat — beskyt den.";
+    if (avg >= 75) return "Solid uge. Du ved hvad de resterende kløfter er.";
+    if (avg >= 60) return "Funktionelt — ikke skarpt. Du er i stand til mere.";
+    if (avg >= 45) return "Under din standard. Navngiv det — forklar det ikke væk.";
+    return "Denne uge matchede ikke dine standarder. Anerkend det. Nulstil præcist.";
+  }
+
+
+  /* ============================================
+     COACH-INDSIGTSMOTOR
+  ============================================ */
+
+  function setInsight(id, text, dim) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = text;
+    el.className   = dim ? 'insight-text dim' : 'insight-text';
+  }
+
+  function clearCoach() {
+    setInsight('coach-constraint', 'Indtast scorer for at generere indsigter.', true);
+    ['coach-low','coach-high','coach-risk','coach-angle','coach-question']
+      .forEach(id => setInsight(id, '—', true));
+  }
+
+  function buildCoach(s) {
+    const active = Object.entries(s).filter(([,v]) => v !== null);
+    if (!active.length) { clearCoach(); return; }
+
+    const sorted  = [...active].sort((a,b) => a[1] - b[1]);
+    const lowest  = sorted[0];
+    const highest = sorted[sorted.length - 1];
+
+    setInsight('coach-constraint', getPrimaryConstraint(s) || '—', false);
+    setInsight('coach-low',  `${LABELS[lowest[0]]}: ${lowest[1]}`,   false);
+    setInsight('coach-high', `${LABELS[highest[0]]}: ${highest[1]}`, false);
+
+    // Risiko
+    let risk;
+    if (s.capacity !== null && s.capacity < 40 && s.focus !== null && s.focus < 50)
+      risk = "Overcommitment komprimerer fokus og reducerer leveringskvalitet. Systemisk, ikke situationel.";
+    else if (s.decision !== null && s.decision > 72 && s.outcome !== null && s.outcome < 45)
+      risk = "Høj beslutningsfrekvens mod lav levering skaber falsk fremdrift.";
+    else if (s.elimination === 0 && s.capacity !== null && s.capacity < 60)
+      risk = "Nul eliminering under begrænset kapacitet akkumulerer. Noget skal fjernes nu.";
+    else if (s.identity !== null && s.identity > 78 && s.outcome !== null && s.outcome < 50)
+      risk = "Stærkt selvbillede mod svag levering skaber blinde pletter.";
+    else if (s.outcome !== null && s.outcome < 40)
+      risk = "Resultatlevering er det kritiske svigt. Alt andet hviler på denne.";
+    else if (lowest[1] < 35)
+      risk = `${LABELS[lowest[0]]} er kritisk lav. Det er gulvet alt andet hviler på.`;
+    else
+      risk = `${LABELS[lowest[0]]} er den primære begrænsning. Adressér det inden du tilføjer noget.`;
+
+    setInsight('coach-risk', risk, false);
+
+    // Vinkel
+    let angle;
+    if (s.capacity !== null && s.capacity < 50)
+      angle = "Start med en kalender- og engagementsaudit. Før kapacitet er ærlig, bevæger intet sig.";
+    else if (s.elimination === 0)
+      angle = "Åbn med subtraktion. Hvad stopper denne leder nu? Navngiv det.";
+    else if (s.decision !== null && s.decision > 70 && s.outcome !== null && s.outcome < 60)
+      angle = "Fokusér på operationalisering — kløften mellem en beslutning og en afsluttet ting.";
+    else if (s.identity !== null && s.identity > 80 && s.outcome !== null && s.outcome < 55)
+      angle = "Udfordre selvopfattelsen direkte. Hvordan ændrer leveringsdataene historien?";
+    else if (s.focus !== null && s.focus < 45)
+      angle = "Kortlæg præcis hvor tiden gik. Navngiv hvert element.";
+    else if (highest[1] > 78 && lowest[1] < 50)
+      angle = "Kompetencen eksisterer. Find flaskehalsen og fjern den.";
+    else
+      angle = "Hvad skal der til for at flytte de to laveste scorer 15 point på syv dage?";
+
+    setInsight('coach-angle', angle, false);
+
+    // Åbningsspørgsmål — præcist og umuligt at undgå
+    let question;
+    if (s.capacity !== null && s.capacity < 50)
+      question = "Hvad har du sagt ja til, som du vidste du ikke kunne levere?";
+    else if (s.decision !== null && s.decision > 70 && s.outcome !== null && s.outcome < 55)
+      question = "Hvilken beslutning lader du som om er implementeret?";
+    else if (s.focus !== null && s.focus < 45)
+      question = "Hvad bruger du tid på, som ikke burde eksistere på din liste?";
+    else if (s.elimination === 0)
+      question = "Hvad burde du have stoppet denne uge — og hvad forhindrede dig?";
+    else if (s.identity !== null && s.identity > 78 && s.outcome !== null && s.outcome < 55)
+      question = "Hvor overbooker du dig selv bevidst?";
+    else if (s.outcome !== null && s.outcome < 45)
+      question = "Hvad var den reelle årsag til at resultaterne ikke kom?";
+    else
+      question = "Hvad undgår du at navngive direkte i dag?";
+
+    setInsight('coach-question', question, false);
+  }
+
+
+  /* ============================================
+     DASHBOARD-OPDATERING
+  ============================================ */
+
+  function refresh() {
+    const active = Object.values(S).filter(v => v !== null);
+    const count  = active.length;
+
+    // Mini-scorer med konsistent farveska
+    Object.keys(S).forEach(k => {
+      const el = document.getElementById('mini-' + k);
+      if (!el) return;
+      const val = S[k];
+      el.textContent = val !== null ? val : '—';
+      if (val !== null) {
+        el.className = 'mini-val ' + (val < 60 ? 'c-low' : val < 80 ? 'c-mid' : 'c-high');
+      } else {
+        el.className = 'mini-val';
+      }
+    });
+
+    document.getElementById('score-count').textContent = count;
+
+    // Eksekveringsgab
+    const gapEl = document.getElementById('exec-gap');
+    if (S.outcome !== null) {
+      const gap = 100 - S.outcome;
+      gapEl.textContent = gap;
+      gapEl.className   = 'eg-value ' + (gap > 40 ? 'gap-high' : gap > 20 ? 'gap-mid' : 'gap-low');
+    } else {
+      gapEl.textContent = '—';
+      gapEl.className   = 'eg-value';
+    }
+
+    // Tom tilstand
+    if (count === 0) {
+      const scoreEl = document.getElementById('total-score');
+      scoreEl.textContent = '—';
+      scoreEl.className   = 'score-big';
+      const pill = document.getElementById('status-pill');
+      pill.textContent = 'Ingen data';
+      pill.className   = 'status-pill';
+      const diag = document.getElementById('diag-text');
+      diag.textContent = 'Indtast tallene. Se sandheden.';
+      diag.className   = 'diag-line empty';
+      document.getElementById('interp-text').textContent = 'Ingen score endnu. Ingen fortælling endnu.';
+      document.getElementById('interp-text').className   = 'interpretation empty';
+      document.getElementById('pc-block').style.display  = 'none';
+      document.getElementById('face-text').textContent   = 'Ingen score. Ingen sandhed.';
+      document.getElementById('face-text').className     = 'face-bar-text';
+      clearCoach();
+      return;
+    }
+
+    const total = Math.round(active.reduce((a,b) => a+b, 0) / count);
+
+    // SSI-score — farvet konsistent med resten af skalaen
+    const scoreEl = document.getElementById('total-score');
+    scoreEl.textContent = total;
+    scoreEl.className   = 'score-big ' + (total < 60 ? 'c-low' : total < 80 ? 'c-mid' : 'c-high');
+
+    // Status
+    let statusText, statusCls;
+    if      (total >= 80) { statusText = 'Grøn';  statusCls = 'green'; }
+    else if (total >= 60) { statusText = 'Gul';   statusCls = 'yellow'; }
+    else                  { statusText = 'Rød';   statusCls = 'red'; }
+
+    const pill = document.getElementById('status-pill');
+    pill.textContent = statusText;
+    pill.className   = 'status-pill ' + statusCls;
+
+    // Diagnose-linje
+    const diagnosis  = buildDiagnosis(S);
+    const diagEl     = document.getElementById('diag-text');
+    diagEl.textContent = diagnosis || '';
+    diagEl.className   = diagnosis ? 'diag-line' : 'diag-line empty';
+
+    // Primær begrænsning
+    const constraint = getPrimaryConstraint(S);
+    const pcBlock    = document.getElementById('pc-block');
+    if (constraint) {
+      document.getElementById('pc-text').textContent = constraint;
+      pcBlock.style.display = '';
+    } else {
+      pcBlock.style.display = 'none';
+    }
+
+    // Ét at konfrontere
+    const faceEl = document.getElementById('face-text');
+    faceEl.textContent = getOneThing(S);
+    faceEl.className   = 'face-bar-text live';
+
+    // Fortolkning
+    const interpEl = document.getElementById('interp-text');
+    interpEl.textContent = buildInterpretation(S);
+    interpEl.className   = 'interpretation';
+
+    buildCoach(S);
+  }
+
+
+  /* ============================================
+     EKSPORT — ledelsesrapport
+  ============================================ */
+
+  function copyClipboard() {
+    const active = Object.values(S).filter(v => v !== null);
+    const total  = active.length
+      ? Math.round(active.reduce((a,b) => a+b, 0) / active.length)
+      : null;
+
+    let statusText = 'Ingen data';
+    if (total !== null) {
+      if      (total >= 80) statusText = 'GRØN';
+      else if (total >= 60) statusText = 'GUL';
+      else                  statusText = 'RØD';
+    }
+
+    const g   = id => (document.getElementById(id) || {}).value || '—';
+    const sc  = k  => S[k] !== null ? S[k] : '—';
+    const gap = S.outcome !== null ? (100 - S.outcome) : '—';
+    const sep = '════════════════════════════════════════════';
+
+    const lines = [
+      'SEG — STRATEGISK EKSEKVERINGSGOVERNANCE',
+      'SSI — Strategisk Sundhedsindeks · Ugentlig ledelsesaudit',
+      sep,
+      '',
+      `Uge:             ${g('week-date')}`,
+      `Dato:            ${new Date().toLocaleDateString('da-DK', {weekday:'long', year:'numeric', month:'long', day:'numeric'})}`,
+      '',
+      `SSI SCORE:       ${total !== null ? total : '—'} / 100  —  ${statusText}`,
+      `Eksekveringsgab: ${gap}`,
+      '',
+      sep,
+      'PRIMÆR BEGRÆNSNING',
+      sep,
+      getPrimaryConstraint(S) || '—',
+      '',
+      sep,
+      'ÉT AT KONFRONTERE',
+      sep,
+      getOneThing(S),
+      '',
+      sep,
+      'DIAGNOSE',
+      sep,
+      buildDiagnosis(S) || '—',
+      '',
+      sep,
+      'FORTOLKNING',
+      sep,
+      buildInterpretation(S),
+      '',
+      sep,
+      'SSI-KOMPONENTER',
+      sep,
+      `Resultat-score:       ${sc('outcome')}`,
+      `Beslutnings-score:    ${sc('decision')}`,
+      `Fokus-score:          ${sc('focus')}`,
+      `Kapacitetsintegritet: ${sc('capacity')}`,
+      `Eliminerings-score:   ${sc('elimination')}`,
+      `Identitetsafstemning: ${sc('identity')}`,
+      '',
+      sep,
+      'SEG COACH-PANEL',
+      sep,
+      `Laveste:          ${document.getElementById('coach-low').textContent}`,
+      `Højeste:          ${document.getElementById('coach-high').textContent}`,
+      `Risiko:           ${document.getElementById('coach-risk').textContent}`,
+      `Coaching-vinkel:  ${document.getElementById('coach-angle').textContent}`,
+      `Åbningsspørgsmål: ${document.getElementById('coach-question').textContent}`,
+      '',
+      sep,
+      'UGENTLIG REALITETSTJEK',
+      sep,
+      'Den brutale sandhed denne uge:',
+      g('txt-truth'),
+      '',
+      'Hvad jeg sagde betød noget:',
+      g('txt-said'),
+      '',
+      'Hvad jeg faktisk gjorde:',
+      g('txt-did'),
+      '',
+      sep,
+      'ÉT TRÆK FOR NÆSTE UGE',
+      sep,
+      `Handling:    ${g('move-action')}`,
+      `Stop:        ${g('move-stop')}`,
+      `Beslutning:  ${g('move-decision')}`,
+      `Ansvarlig:   ${g('move-owner')}`,
+      `Deadline:    ${g('move-deadline')}`,
+      `Færdig når:  ${g('move-dod')}`,
+      '',
+      sep,
+      'SEG — Strategisk Eksekveringsgovernance · Privat ledelsesværktøj',
+    ].join('\n');
+
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(lines)
+        .then(() => showToast('Rapport kopieret til udklipsholderen.'))
+        .catch(() => fallbackCopy(lines));
+    } else {
+      fallbackCopy(lines);
+    }
+  }
+
+  function fallbackCopy(text) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;opacity:0;top:0;left:0;';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    try {
+      document.execCommand('copy');
+      showToast('Rapport kopieret til udklipsholderen.');
+    } catch {
+      showToast('Kopiering mislykkedes — vælg teksten manuelt.');
+    }
+    document.body.removeChild(ta);
+  }
+
+
+  /* ============================================
+     NULSTIL
+  ============================================ */
+
+  function resetWeek() {
+    if (!confirm('Nulstil alle data for denne uge? Dette kan ikke fortrydes.')) return;
+
+    FIELD_IDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = '';
+    });
+
+    SLIDER_IDS.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) { el.value = 0; el.dataset.touched = 'false'; }
+    });
+
+    document.getElementById('focus-display').textContent    = '—%';
+    document.getElementById('identity-display').textContent = '—';
+
+    Object.keys(S).forEach(k => S[k] = null);
+    Object.keys(S).forEach(k => setCard(k, null, defaultNote(k), ''));
+
+    ['focus','identity'].forEach(m => {
+      const n = document.getElementById('note-' + m);
+      n.textContent = defaultNote(m);
+      n.className   = 'status-note';
+    });
+
+    refresh();
+    localStorage.removeItem(STORE);
+    showToast('Uge nulstillet. Klar til ny cyklus.');
+  }
+
+  function defaultNote(metric) {
+    return {
+      outcome:     'Indtast forpligtede og leverede resultater.',
+      decision:    'Indtast trufne og eksekverede beslutninger.',
+      focus:       'Træk slideren. Vær ærlig, ikke generøs.',
+      capacity:    'Tilgængelige timer vs. forpligtede timer.',
+      elimination: 'Nul eliminering er et signal, ikke en neutral position.',
+      identity:    'Den sværeste score at oppusse, hvis du er ærlig.'
+    }[metric] || '';
+  }
+
+
+  /* ============================================
+     TOAST
+  ============================================ */
+
+  let _tt = null;
+
+  function showToast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    if (_tt) clearTimeout(_tt);
+    _tt = setTimeout(() => el.classList.remove('show'), 3200);
+  }
+
+
+  /* ============================================
+     INITIALISERING
+  ============================================ */
+
+  document.addEventListener('DOMContentLoaded', loadState);
+
+</script>
+</body>
+</html>
